@@ -81,8 +81,16 @@ function getPolynom() {
  *   ...
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  const cash = new Map();
+  return () => {
+    if (cash.has(func)) {
+      return cash.get(func);
+    }
+    const foo = func();
+    cash.set(func, foo);
+    return foo;
+  };
 }
 
 
@@ -101,8 +109,14 @@ function memoize(/* func */) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  return () => {
+    try {
+      return func();
+    } catch (error) {
+      return retry(func, attempts - 1)();
+    }
+  };
 }
 
 
@@ -169,8 +183,12 @@ function partialUsingArguments(/* fn, ...args1 */) {
  *   getId4() => 7
  *   getId10() => 11
  */
-function getIdGeneratorFunction(/* startFrom */) {
-  throw new Error('Not implemented');
+function getIdGeneratorFunction(startFrom) {
+  let res = startFrom;
+  return () => {
+    res += 1;
+    return res - 1;
+  };
 }
 
 
